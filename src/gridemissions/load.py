@@ -227,8 +227,7 @@ class GraphData(object):
     def check_nans(self, region: str) -> None:
         """"""
         for field in self.fields:
-            ind_na = self.get_data(region=region, field=field).isna()
-            cnt_na = ind_na.sum()
+            cnt_na = self.get_data(region=region, field=field).isna().values.sum()
             if cnt_na != 0:
                 self.logger.error(f"{region}: {cnt_na} NaNs for {field}")
 
@@ -545,15 +544,14 @@ class BaData(object):
 
         # NaNs
         for field in ["D", "NG", "TI"]:
-            ind_na = self.df.loc[:, self.get_cols(r=ba, field=field)[0]].isna()
-            cnt_na = ind_na.sum()
+            cnt_na = self.df.loc[:, self.get_cols(r=ba, field=field)[0]].isna().values.sum()
             if cnt_na != 0:
                 logger.error(
                     "There are still %d nans for %s field %s" % (cnt_na, ba, field)
                 )
 
         for ba2 in partners:
-            cnt_na = self.df.loc[:, self.KEY["ID"] % (ba, ba2)].isna().sum()
+            cnt_na = self.df.loc[:, self.KEY["ID"] % (ba, ba2)].isna().values.sum()
             if cnt_na != 0:
                 logger.error("There are still %d nans for %s-%s" % (cnt_na, ba, ba2))
 
